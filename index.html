@@ -97,6 +97,17 @@ canvas{
   z-index:4;
   text-align:center;
 }
+
+/* Forgive message */
+#forgiveMsg{
+  display:block;
+  font-size:18px;
+  margin-top:20px;
+  line-height:1.6;
+  visibility:hidden;
+  opacity:0;
+  transition: opacity 2s ease-in;
+}
 </style>
 </head>
 <body>
@@ -157,7 +168,7 @@ canvas{
 <div id="page4" class="section">
   <h1>Forgive Your Stupid Boy 😔</h1>
   <button style="background:#ff4b6e;color:white;" onclick="forgive()">OK I Forgive You ❤️</button>
-  <p id="forgiveMsg" style="display:none; font-size:18px; margin-top:20px; line-height:1.6;"></p>
+  <p id="forgiveMsg"></p>
   <button onclick="nextPage(1)">Back Home ❤️</button>
 </div>
 
@@ -256,20 +267,26 @@ function animate(){
 function startFireworks(){
   document.getElementById('hiddenText').style.opacity = 1;
   document.getElementById('finalMessage').style.display = "block";
-  // Hearts floating faster + sparkle during fireworks
   setInterval(createHeart,200);
   setInterval(createFirework,800);
   animate();
 }
 
 // =======================
-// Forgive Page
+// Forgive Page - Mobile Friendly Fade-in
 // =======================
 function forgive(){
-  const msg = "I will always love you the most. You are my favorite, my best gift, and the light of my life. Every moment with you fills my heart with joy and happiness. Your smile, your laughter, and your love make me a better person. I promise to cherish you, support you, and be by your side through everything. You are my dream come true, my everything, and my forever Valentine. I am so grateful for you, and I will never let go of the love we share. 💖";
   const p = document.getElementById('forgiveMsg');
-  p.innerText = msg;
-  p.style.display = "block";
+  p.innerText = "I will always love you the most. You are my favorite, my best gift, and the light of my life. Every moment with you fills my heart with joy and happiness. Your smile, your laughter, and your love make me a better person. I promise to cherish you, support you, and be by your side through everything. You are my dream come true, my everything, and my forever Valentine. I am so grateful for you, and I will never let go of the love we share. 💖";
+  p.style.visibility = "visible";
+  p.style.opacity = 0;
+  let op = 0;
+  function fade(){
+      op += 0.02;
+      p.style.opacity = op;
+      if(op < 1) requestAnimationFrame(fade);
+  }
+  requestAnimationFrame(fade);
 }
 </script>
 </body>
