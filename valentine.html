@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Esha ❤️</title>
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  text-align:center;
+  overflow-x:hidden;
+  background:#ffd6e8; /* light pink */
+  color:white;
+  position: relative;
+}
+
+/* Floating hearts on all pages */
+.heart{
+  position:fixed;
+  bottom:-10px;
+  font-size:20px;
+  animation:float 6s linear infinite, rotateHeart 6s linear infinite, sparkle 1.5s infinite alternate;
+  text-shadow: 0 0 5px #ffb6c1, 0 0 10px #ff69b4;
+  z-index:3; /* in front of fireworks */
+}
+@keyframes float{
+  0%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-50vh) scale(1.2);}
+  100%{transform:translateY(-100vh) scale(1);}
+}
+@keyframes rotateHeart{
+  0%{transform:rotate(0deg);}
+  50%{transform:rotate(15deg);}
+  100%{transform:rotate(0deg);}
+}
+@keyframes sparkle{
+  0%{text-shadow:0 0 2px #fff, 0 0 4px #fff;}
+  50%{text-shadow:0 0 8px #ffb6c1, 0 0 16px #ff69b4;}
+  100%{text-shadow:0 0 2px #fff, 0 0 4px #fff;}
+}
+
+h1,h2{margin:20px;}
+button{
+  padding:12px 25px;
+  margin:15px;
+  font-size:18px;
+  border:none;
+  border-radius:25px;
+  cursor:pointer;
+}
+button:hover{background:#ffe6ec;}
+.section{display:none; padding:20px;}
+.active{display:block;}
+
+/* Photo gallery */
+img{
+  width:200px;
+  border-radius:15px;
+  margin:10px;
+  box-shadow:0 0 10px rgba(0,0,0,0.3);
+}
+
+/* Fireworks */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+  z-index:1;
+}
+
+/* Hidden Surprise */
+.hiddenText{
+  position:fixed;
+  top:45%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:40px;
+  font-family:cursive;
+  color:#ff4b6e;
+  opacity:0;
+  transition: opacity 5s ease-in;
+  z-index:4;
+}
+
+/* Final message */
+.final-message{
+  position: fixed;
+  top:60%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  font-size:28px;
+  font-weight:bold;
+  display:none;
+  color:#ffd6e8;
+  z-index:4;
+  text-align:center;
+}
+</style>
+</head>
+<body>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+  <source src="romantic.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Start Screen -->
+<div id="startScreen" class="active">
+  <h1>💖 Happy Valentine’s Day 💖</h1>
+  <button onclick="startLove()">💞 Click to Start Your Surprise 💞</button>
+</div>
+
+<!-- PAGE 1: Intro + Timer -->
+<div id="page1" class="section">
+  <h1>For My Love ❤️</h1>
+  <p style="font-size:20px;">
+    I fight because I love you and I don't want to lose you.<br>
+    I love you and want to be with you forever.<br>
+    I choose you every single day. 💞
+  </p>
+  <h2 id="timer"></h2>
+  <button onclick="nextPage(2)">My Favourite Memories of Her 💕</button>
+  <button onclick="nextPage(3)">Next Chapter 💌</button>
+</div>
+
+<!-- PAGE 2: Photo Gallery -->
+<div id="page2" class="section">
+  <h2>My Favourite Memories of Her 💕</h2>
+  <img src="photo1.jpg" alt="Her Photo">
+  <img src="photo2.jpg" alt="Her Photo">
+  <img src="photo3.jpg" alt="Her Photo">
+  <img src="photo4.jpg" alt="Her Photo">
+  <br>
+  <button onclick="nextPage(3)">Next 💌</button>
+  <button onclick="nextPage(1)">Back ❤️</button>
+</div>
+
+<!-- PAGE 3: Valentine Proposal + Fireworks -->
+<div id="page3" class="section">
+  <h1>Will You Be My Valentine? 💘</h1>
+  <button style="background:#ff4b6e;color:white;" onclick="startFireworks()">YES ❤️</button>
+  <button style="background:gray;color:white;" onclick="alert('No option not available 😌')">NO 🙈</button>
+  <button onclick="nextPage(1)">Back Home ❤️</button>
+
+  <!-- Hidden Surprise -->
+  <div id="hiddenText" class="hiddenText">Abhinav loves Esha 💖</div>
+  <div class="final-message" id="finalMessage">
+    This is how I will light up the sky on our wedding 💍✨
+  </div>
+  <br>
+  <button onclick="nextPage(4)">Forgive Me 😔</button>
+</div>
+
+<!-- PAGE 4: Forgiveness Page -->
+<div id="page4" class="section">
+  <h1>Forgive Your Stupid Boy 😔</h1>
+  <button style="background:#ff4b6e;color:white;" onclick="forgive()">OK I Forgive You ❤️</button>
+  <p id="forgiveMsg" style="display:none; font-size:18px; margin-top:20px; line-height:1.6;"></p>
+  <button onclick="nextPage(1)">Back Home ❤️</button>
+</div>
+
+<!-- Fireworks Canvas -->
+<canvas id="fireworks"></canvas>
+
+<script>
+// =======================
+// Floating Hearts in Background
+// =======================
+function createHeart(){
+  const heart = document.createElement("div");
+  heart.className="heart";
+  heart.innerHTML=Math.random()<0.5?"❤️":"💖";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.animationDuration=(Math.random()*3+3)+"s";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),6000);
+}
+setInterval(createHeart,300);
+
+// =======================
+// Timer Since 1 June 2025
+// =======================
+const startDate = new Date("2025-06-01T00:00:00");
+function updateTimer(){
+  const now = new Date();
+  const diff = now - startDate;
+  const days = Math.floor(diff/(1000*60*60*24));
+  const hours = Math.floor(diff/(1000*60*60));
+  const minutes = Math.floor(diff/(1000*60));
+  const seconds = Math.floor(diff/1000);
+  document.getElementById("timer").innerHTML =
+    `💖 Since 1 June 2025 ❤️<br>
+    ${days} Days | ${hours} Hours | ${minutes} Minutes | ${seconds} Seconds`;
+}
+setInterval(updateTimer,1000);
+updateTimer();
+
+// =======================
+// Page Navigation
+// =======================
+function nextPage(num){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('page'+num).classList.add('active');
+}
+
+// =======================
+// Start Music & First Page
+// =======================
+function startLove(){
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('page1').classList.add('active');
+  const music = document.getElementById('bgMusic');
+  if(music.paused) music.play();
+}
+
+// =======================
+// Fireworks + Glowing Hearts
+// =======================
+const canvas=document.getElementById("fireworks");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+let particles=[];
+
+function createFirework(){
+  const x=Math.random()*canvas.width;
+  const y=Math.random()*canvas.height/2;
+  for(let i=0;i<100;i++){
+    particles.push({
+      x:x, y:y, radius:2,
+      color:`hsl(${Math.random()*360},100%,60%)`,
+      angle:Math.random()*2*Math.PI,
+      speed:Math.random()*5
+    });
+  }
+}
+
+function animate(){
+  ctx.fillStyle="rgba(0,0,0,0.2)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{
+    p.x+=Math.cos(p.angle)*p.speed;
+    p.y+=Math.sin(p.angle)*p.speed;
+    p.speed*=0.95;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+    ctx.fillStyle=p.color;
+    ctx.fill();
+    if(p.speed<0.5) particles.splice(i,1);
+  });
+  requestAnimationFrame(animate);
+}
+
+function startFireworks(){
+  document.getElementById('hiddenText').style.opacity = 1;
+  document.getElementById('finalMessage').style.display = "block";
+  // Hearts floating faster + sparkle during fireworks
+  setInterval(createHeart,200);
+  setInterval(createFirework,800);
+  animate();
+}
+
+// =======================
+// Forgive Page
+// =======================
+function forgive(){
+  const msg = "I will always love you the most. You are my favorite, my best gift, and the light of my life. Every moment with you fills my heart with joy and happiness. Your smile, your laughter, and your love make me a better person. I promise to cherish you, support you, and be by your side through everything. You are my dream come true, my everything, and my forever Valentine. I am so grateful for you, and I will never let go of the love we share. 💖";
+  const p = document.getElementById('forgiveMsg');
+  p.innerText = msg;
+  p.style.display = "block";
+}
+</script>
+</body>
+</html>
